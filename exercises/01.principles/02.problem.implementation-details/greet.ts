@@ -1,6 +1,5 @@
 function greet(name: string) {
-	// 🐨 Looks like someone has changed the implementation...
-	return `Howdy, ${name}!`
+	return `Hello, ${name}!`
 }
 
 let message = greet('John')
