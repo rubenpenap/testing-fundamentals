@@ -1,3 +1,13 @@
+> ## 🚨 Important Notice
+>
+> This repository is a clone of the
+> [Testing Fundamentals](https://www.epicweb.dev/workshops/testing-fundamentals)
+> by Epic Web. It has been published solely to document my GitHub activity
+> and for personal educational purposes.
+>
+> **Note:** This is not an official fork or a maintained derivative of the
+> original project.
+
 <div>
   <h1 align="center">Testing Fundamentals</h1>
   <strong>
