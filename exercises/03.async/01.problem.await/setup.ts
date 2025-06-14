@@ -19,9 +19,9 @@ globalThis.expect = function (actual: unknown) {
 	}
 }
 
-globalThis.test = function (title, callback) {
+globalThis.test = async function (title, callback) {
 	try {
-		callback()
+		await callback()
 		console.log(`✓ ${title}`)
 	} catch (error) {
 		console.error(`✗ ${title}`)
