@@ -36,35 +36,25 @@ test('returns a congratulation message for the given name', () => {
 	expect(congratulate('Sarah')).toBe('Congrats, Sarah!')
 })
 
-// 🐨 Create a "waitFor()" function that accepts a single argument:
-// a "callback" function.
-// 💰 async function waitFor(callback: () => void, maxRetries = 5) {}
-
-// 🐨 In the "waitFor()" function, call the "callback" function.
-// - If it doesn't throw, return.
-// - If it throws, re-run it after a 250ms interval.
-// - Retry the callback 5 times. If it still throws,
-// throw the last thrown error as-is.
-// 💰 Use a "while" loop and an early return to break it.
-// let retries = 0
-// while (retries < maxRetries) {
-//   try {
-//     retries++
-//     callback()
-//     return
-//   } catch (error) {
-//     if (retries === maxRetries) {
-//       throw error
-//     }
-//     await new Promise(resolve => setTimeout(resolve, 250))
-//   }
-// }
-
-test('displays a notification when a new user joins', () => {
+async function waitFor(callback: () => void, maxRetries = 5) {
+	let retries = 0
+	while (retries < maxRetries) {
+		try {
+			retries++
+			callback()
+			return
+		} catch (error) {
+			if (retries === maxRetries) {
+				throw error
+			}
+			await new Promise(resolve => setTimeout(resolve, 250))
+		}
+	}
+}
+test('displays a notification when a new user joins', async () => {
 	const manager = new NotificationManager()
 	manager.showNotification(Response.json({ firstName: 'Kate' }))
-
-	// 🐨 Use the newly created "waitFor()" function
-	// to wrap this assertion and, thus, await it to eventually resolve.
-	expect(manager.notifications[0]).toBe('Hello, Kate! Happy, Monday.')
+	await waitFor(() => {
+		expect(manager.notifications[0]).toBe('Hello, Kate! Happy, Monday.')
+	})
 })
