@@ -1,11 +1,6 @@
 interface Assertions {
 	toBe(expected: unknown): void
-
-	// 🐨 Declare a new key called "rejects".
-	// In that key, define a new assertion function called "toThrow".
-	// The "toThrow" assertion accepts a single argument: the
-	// expected Error instance.
-	// 💰 rejects: { toThrow(expected: Error): Promise<void> }
+	rejects: { toThrow(expected: Error): Promise<void> }
 }
 
 declare global {
@@ -22,18 +17,24 @@ globalThis.expect = function (actual: unknown) {
 				throw new Error(`Expected ${actual} to equal to ${expected}`)
 			}
 		},
-		// 🐨 Following the type declaration for Assertions,
-		// add a new key called "rejects" and declare the
-		// "toThrow" function.
-		// 💰 rejects: { toThrow(expected) { ... } }
-
-		// 🐨 In the "toThrow()" function, listen to when the "actual"
-		// Promise rejects, and compare the rejection error message
-		// with the "expected" error message from the "toThrow()" argument.
-		// 💰 return actual.catch((error) => { ... })
-
-		// 🐨 Bonus points if you make "toThrow()" function throw an error
-		// if the "actual" Promise *resolves*.
+		rejects: {
+			toThrow(expected) {
+				if (!(actual instanceof Promise)) {
+					throw new Error('Expected to receive a Promise')
+				}
+				return actual
+					.then(() => {
+						throw new Error('Expected promise to reject')
+					})
+					.catch(error => {
+						if (error.message !== expected.message) {
+							throw new Error(
+								`Expected error message to be ${expected.message} but got ${error.message}`,
+							)
+						}
+					})
+			},
+		},
 	}
 }
 
