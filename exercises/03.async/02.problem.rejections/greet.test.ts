@@ -3,8 +3,9 @@ import { greet, greetByResponse, congratulate } from './greet.js'
 const OriginalDate = globalThis.Date
 
 beforeAll(() => {
-	globalThis.Date = new Proxy(globalThis.Date, {
-		construct: () => new OriginalDate('2024-01-01'),
+	globalThis.Date = new Proxy(OriginalDate, {
+		construct: (target, args: ConstructorParameters<typeof Date>) =>
+			args.length ? new target(...args) : new target(2024, 0, 1),
 	})
 })
 
@@ -22,10 +23,9 @@ test('returns a greeting message for the given user response', async () => {
 })
 
 test('throws on greeting user with undefined user response', async () => {
-	// 🐨 Use the newly created ".rejects.toThrow(error)" assertion
-	// to make sure that the "greetByResponse()" function throws if
-	// it's given undefined as the argument.
-	// 💰 await expect(greetByResponse(undefined)).rejects.toThrow(...)
+	await expect(greetByResponse(undefined)).rejects.toThrow(
+		new Error('Failed to greet the user: no user response provided'),
+	)
 })
 
 test('returns a congratulation message for the given name', () => {
